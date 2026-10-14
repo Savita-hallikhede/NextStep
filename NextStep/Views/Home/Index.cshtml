@@ -1,0 +1,186 @@
+﻿@* ============================================================
+   Index.cshtml = the Home page content.
+   It is automatically placed inside _Layout.cshtml at @RenderBody().
+   So NO <html>, <head>, header or footer here.
+   ============================================================ *@
+
+@{
+    // ---- C# code block: runs on the server before the HTML is sent ----
+
+    ViewData["Title"] = "Home";    // Sets the browser tab title (used in _Layout)
+
+    // List of guidance categories. Later this can come from SQL Server.
+    var categories = new[] {
+        new { Icon="📘", Name="After 10th",        Text="Science, Commerce, Arts, diploma or ITI — choose your stream with confidence." },
+        new { Icon="🎒", Name="After 12th",        Text="Degrees, entrance exams and career options that fit your marks and interests." },
+        new { Icon="🏛️", Name="UPSC & Govt Jobs",  Text="UPSC, SSC, banking and state exams from people who cleared them." },
+        new { Icon="🩺", Name="NEET & Medical",    Text="NEET prep, MBBS, BDS, nursing, pharmacy and allied health careers." },
+        new { Icon="📐", Name="JEE & Engineering", Text="JEE strategy, choosing colleges and branches, internships and projects." },
+        new { Icon="📊", Name="CA & Commerce",     Text="CA, CS, CMA, B.Com and finance careers, step by step." },
+        new { Icon="💼", Name="Placements & Jobs", Text="Resumes, interviews, off-campus hunting and first-job decisions." },
+        new { Icon="🎓", Name="Higher Studies",    Text="M.Tech, MBA, MS abroad — exams, applications and funding." }
+    };
+
+    // The 3 steps of "How it works"
+    var steps = new[] {
+        new { Title="Tell Us About Yourself", Text="Share your background, interests, skills and goals in a 3-minute profile." },
+        new { Title="Find Your Guide",        Text="We match you with verified mentors who've walked your exact path." },
+        new { Title="Book a Session",         Text="Pick a time that works and start a focused one-on-one conversation." }
+    };
+
+    // The 4 trust points
+    var trust = new[] {
+        new { Icon="✔", Title="Verified Guides",       Text="Every mentor is ID- and credential-checked." },
+        new { Icon="◎", Title="Personalized Matching", Text="Matched on goals, not just subjects." },
+        new { Icon="★", Title="Student Reviews",       Text="Honest ratings after every session." },
+        new { Icon="🛡", Title="Safe Guidance",         Text="Moderated sessions and private data." }
+    };
+
+    // Student stories based on real-life problems (sample data — replace with real feedback)
+    var testimonials = new[] {
+        new { Problem="Low marks, family pressure", Quote="I scored 62% in 12th and my parents wanted engineering. My guide helped me show them a realistic plan for B.Com + CA. Now they support me.", Name="Priya S.", Role="CA Foundation student, Nagpur" },
+        new { Problem="Second NEET attempt", Quote="After failing NEET once, I didn't know whether to drop a year or move on. My mentor helped me weigh both options honestly, with a backup plan.", Name="Arjun T.", Role="NEET repeater, Patna" },
+        new { Problem="Can't afford coaching", Quote="Coaching fees were impossible for us. My guide made a free-resource study plan for UPSC and checks in with me every week.", Name="Kavya N.", Role="UPSC aspirant, Rural Karnataka" },
+        new { Problem="Tier-3 college, no placements", Quote="No companies came to our campus. My mentor fixed my resume, taught me off-campus job hunting and I got an offer in 4 months.", Name="Rohit M.", Role="B.Tech graduate, Indore" },
+        new { Problem="Confused after 10th", Quote="Everyone said 'take Science'. My guide gave me an aptitude chat, and I chose Commerce because I actually enjoy it.", Name="Sana K.", Role="Class 11 student, Lucknow" },
+        new { Problem="English & confidence", Quote="I froze in interviews because of my English. Weekly practice sessions with my guide changed how I speak and how I feel.", Name="Vikram P.", Role="Final year B.Sc, Varanasi" }
+    };
+}
+
+<!-- ===================== HERO (top big section) ===================== -->
+<section class="container hero">
+    @* 2 columns: text left, image right *@
+
+    @* ---- Left side: text ---- *@
+    <div class="fade-up">
+        @* fade-up = slides in on page load *@
+        <span class="pill">Your Goals. Your Guide. Your Future.</span>   @* Small rounded tagline badge *@
+
+        <h1>Find the Right <em>Guidance</em> for Your Journey.</h1>      @* Main heading; <em> word is purple *@
+
+        <p class="lead">
+            @* Short description under heading *@
+            NextStep connects you with verified mentors who understand your education, interests,
+            skills, career goals — and the challenges only you face.
+        </p>
+
+        <div class="hero-buttons">
+            @* The two main buttons *@
+            <a href="#" class="btn btn-primary">Find My Guide →</a>   @* Purple main button *@
+            <a href="#" class="btn btn-outline">Become a Guide</a>     @* Outlined second button *@
+        </div>
+
+        <div class="stats">
+            @* 3 numbers in a row (sample numbers) *@
+            <div><strong>2,500+</strong><span>Verified guides</span></div>
+            <div><strong>40k+</strong><span>Sessions booked</span></div>
+            <div><strong>4.9★</strong><span>Avg. rating</span></div>
+        </div>
+    </div>
+
+    @* ---- Right side: image ---- *@
+    <div class="hero-visual fade-up delay">
+        @* delay = appears slightly after the text *@
+        <div class="hero-bg"></div>                       @* Purple block behind the photo (decoration) *@
+        <img src="~/images/hero.jpg" alt="Mentor guiding two students" />   @* Photo from wwwroot/images *@
+        <div class="float-card">
+            @* Small white card floating over the photo *@
+            <small>Next session</small>
+            <b>JEE Strategy · 6:00 PM</b>
+            <span>● Mentor verified</span>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== CATEGORIES ===================== -->
+<section class="container section">
+    <h2>Guidance for every path</h2>                      @* Section heading *@
+    <p class="muted">Pick your goal — we'll find someone who's been there.</p>
+
+    <div class="grid grid-3">
+        @* 3 cards per row on desktop *@
+        @foreach (var c in categories)                    @* Loop: creates one card for each category *@
+        {
+            <a href="#" class="card lift reveal">
+                @* lift = rises on hover, reveal = fades in on scroll *@
+                <div class="icon-box">@c.Icon</div>       @* Emoji icon *@
+                <h3>@c.Name</h3>                          @* Category name *@
+                <p class="muted small">@c.Text</p>        @* Category description *@
+                <span class="link">Explore guides →</span>
+            </a>
+        }
+
+        @* Special purple card for students who don't know what to choose *@
+        <div class="card card-accent reveal">
+            <div class="icon-big">🧭</div>
+            <h3>Not Sure Yet?</h3>
+            <p class="small">Confused about which path is right? Start with a free career counselling chat.</p>
+            <a href="#" class="link-light">Talk to a counsellor →</a>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== HOW IT WORKS (black section) ===================== -->
+<section id="how" class="dark-section">
+    @* id="how" lets the menu link jump here *@
+    <div class="container">
+        <h2>How it works</h2>
+        <div class="grid grid-3">
+            @for (int i = 0; i < steps.Length; i++)       @* Normal for-loop so we can show step number *@
+            {
+                <div class="step reveal">
+                    <div class="step-num">0@(i + 1)</div> @* Shows 01, 02, 03 *@
+                    <h3>@steps[i].Title</h3>
+                    <p>@steps[i].Text</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ===================== TRUST ===================== -->
+<section class="container section">
+    <h2>Guidance you can trust</h2>
+    <div class="grid grid-4">
+        @* 4 cards per row *@
+        @foreach (var t in trust)
+        {
+            <div class="card card-soft lift reveal">
+                @* card-soft = light purple background *@
+                <div class="icon-circle">@t.Icon</div>    @* Round purple icon *@
+                <h3>@t.Title</h3>
+                <p class="muted small">@t.Text</p>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- ===================== TESTIMONIALS ===================== -->
+<section class="muted-section">
+    @* Light grey background *@
+    <div class="container">
+        <h2>Real problems. Real guidance.</h2>
+        <div class="grid grid-3">
+            @foreach (var t in testimonials)
+            {
+                <figure class="card lift reveal">
+                    <span class="tag">@t.Problem</span>            @* Purple tag showing the problem *@
+                    <blockquote>“@t.Quote”</blockquote>            @* The student's words *@
+                    <figcaption>
+                        <b>@t.Name</b><br />                       @* Student name *@
+                        <span class="muted">@t.Role</span>        @* Student details *@
+                    </figcaption>
+                </figure>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ===================== CALL TO ACTION ===================== -->
+<section class="container section">
+    <div class="cta">
+        @* Big purple box *@
+        <h2>Your next step starts today.</h2>
+        <a href="#" class="btn btn-white">Find My Guide →</a>
+    </div>
+</section>

@@ -1,0 +1,138 @@
+﻿@* ============================================================
+   _Layout.cshtml = the "master page".
+   Every page of the site is shown INSIDE this file.
+   The header (top) and footer (bottom) are written once here,
+   so they appear on every page automatically.
+   ============================================================ *@
+
+<!DOCTYPE html>
+@* Tells the browser this is an HTML5 page *@
+<html lang="en">
+                                        @* Start of the page; lang="en" means English *@
+<head>
+    @* <head> holds settings, not visible content *@
+    <meta charset="utf-8" />                            @* Supports all characters (₹, emojis, Hindi etc.) *@
+    <meta name="viewport" content="width=device-width, initial-scale=1" />  @* Makes the page fit mobile screens *@
+
+    <title>@ViewData["Title"] - NextStep</title>        @* Browser tab text. Each page sets ViewData["Title"] *@
+
+    @* Google Fonts: Archivo (bold headings) and Manrope (normal text) *@
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800;900&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    @* Our own CSS file. "~" means the wwwroot folder. asp-append-version stops old cached CSS *@
+    <link rel="stylesheet" href="~/css/nextstep.css" asp-append-version="true" />
+</head>
+<body>
+    @* Everything visible goes inside <body> *@
+
+    <!-- ===================== HEADER / NAVBAR ===================== -->
+    <header class="navbar">
+        @* Top bar that stays at the top while scrolling *@
+        <nav class="container nav-inner">
+            @* "container" keeps content centred with a max width *@
+
+            @* LOGO: asp-controller/asp-action create the link to HomeController.Index *@
+            <a asp-controller="Home" asp-action="Index" class="logo">
+                <span class="logo-mark">↗</span>        @* Small purple square with an arrow *@
+                NextStep                                @* Brand name *@
+            </a>
+
+            @* Hamburger button: only visible on mobile, opens/closes the menu *@
+            <button class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
+
+            @* MAIN MENU LINKS *@
+            <ul class="nav-links" id="navLinks">
+                <li><a asp-controller="Home" asp-action="Index">Home</a></li>              @* Home page *@
+                <li><a asp-controller="Guides" asp-action="Index">Explore Guides</a></li>  @* Create GuidesController later *@
+                <li><a asp-controller="Home" asp-action="Index" asp-fragment="how">How It Works</a></li> @* Jumps to the section with id="how" *@
+                <li><a asp-controller="Home" asp-action="About">About Us</a></li>          @* Needs an About() action *@
+            </ul>
+
+            @* LOGIN / SIGN UP BUTTONS on the right *@
+            <div class="nav-actions">
+                <a asp-controller="Account" asp-action="Login" class="btn-text">Login</a>          @* Plain text button *@
+                <a asp-controller="Account" asp-action="Register" class="btn btn-dark">Sign Up</a> @* Black rounded button *@
+            </div>
+        </nav>
+    </header>
+
+    <!-- ===================== PAGE CONTENT ===================== -->
+    <main>
+        @RenderBody()   @* <<< VERY IMPORTANT: the content of each View (e.g. Index.cshtml) appears HERE *@
+    </main>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            @* 4 columns on desktop, 1 column on mobile *@
+
+            @* Column 1: logo + tagline *@
+            <div>
+                <a asp-controller="Home" asp-action="Index" class="logo">
+                    <span class="logo-mark">↗</span>NextStep
+                </a>
+                <p class="muted small">Your Goals. Your Guide. Your Future.</p>
+            </div>
+
+            @* Column 2: platform links *@
+            <div>
+                <h4>Platform</h4>                       @* Column heading *@
+                <ul>
+                    <li><a href="#">Explore Guides</a></li>
+                    <li><a href="#how">How It Works</a></li>
+                    <li><a href="#">Become a Guide</a></li>
+                </ul>
+            </div>
+
+            @* Column 3: company links *@
+            <div>
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+
+            @* Column 4: legal links *@
+            <div>
+                <h4>Legal</h4>
+                <ul>
+                    <li><a asp-controller="Home" asp-action="Privacy">Privacy</a></li>  @* Privacy() already exists in the default MVC template *@
+                    <li><a href="#">Terms</a></li>
+                    <li><a href="#">Safety</a></li>
+                </ul>
+            </div>
+        </div>
+
+        @* Copyright line. @DateTime.Now.Year prints the current year automatically *@
+        <p class="copyright">© @DateTime.Now.Year NextStep. All rights reserved.</p>
+    </footer>
+
+    <!-- ===================== JAVASCRIPT ===================== -->
+    <script>
+        // ---- Mobile menu: show/hide links when ☰ is clicked ----
+        document.getElementById("menuToggle").addEventListener("click", function () {   // Run when button clicked
+            document.getElementById("navLinks").classList.toggle("open");               // Add/remove "open" class
+        });
+
+        // ---- Fade cards in when they scroll into view ----
+        const observer = new IntersectionObserver(function (entries) {   // Watches elements entering the screen
+            entries.forEach(function (entry) {                           // Check each watched element
+                if (entry.isIntersecting) {                              // If it is now visible...
+                    entry.target.classList.add("visible");               // ...add "visible" (CSS fades it in)
+                    observer.unobserve(entry.target);                    // Stop watching (animate only once)
+                }
+            });
+        }, { threshold: 0.15 });                                         // Trigger when 15% is visible
+
+        document.querySelectorAll(".reveal").forEach(function (el) {    // Find all elements with class "reveal"
+            observer.observe(el);                                        // Start watching each one
+        });
+    </script>
+
+    @* Lets individual pages add their own scripts if needed *@
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
